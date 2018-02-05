@@ -5,6 +5,8 @@ borderDifferenceEnd = 1000
 borderDifferenceStep = 10
 
 
+PFamInfoDir = "Resources/PFamInfoByProtein.cpickle"
+
 inputFolder = "InputFiles"
 
 resultFolder = "Results"
