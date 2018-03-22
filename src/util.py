@@ -3,6 +3,12 @@ import datetime
 import sys
 
 
+# add an append string to a filename
+def fileAppend(filename, append):
+    loc = filename.rfind(".")
+    return filename[0:loc] + append
+
+
 # generate all the directories needed for the given path (helper function)
 def generateDirectories(path):
     folders = path.split("/")
