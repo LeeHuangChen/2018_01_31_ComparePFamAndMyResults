@@ -85,6 +85,7 @@ def checkDomainsWithModules(borderDict, pfamDict, nestedLeeway = 10):
 
     totNumBorders = 0
     totNestBorders = 0
+    totDomainBorders = 0
 
     proteins = borderDict.keys()
     for protein in proteins:
@@ -97,6 +98,7 @@ def checkDomainsWithModules(borderDict, pfamDict, nestedLeeway = 10):
 
         # checking for all borders in this protein and populate the domainContentDict
         for domainBorder in pfamDict[protein]:
+            totDomainBorders += 1
             nestedborders = []
             for moduleBorder in moduleBorders:
                 ms = moduleBorder[1]
@@ -170,7 +172,8 @@ def checkDomainsWithModules(borderDict, pfamDict, nestedLeeway = 10):
     # print "singleContentCount: ", singleContentCount
     # print "multContentCount: ", multContentCount
 
-    return detailedResults, singleContent, singleContentCount, multContentCount, totNestBorders, totNumBorders
+    return detailedResults, singleContent, singleContentCount, multContentCount, \
+        totNestBorders, totNumBorders, totDomainBorders
 
 
 

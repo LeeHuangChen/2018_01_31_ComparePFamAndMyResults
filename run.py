@@ -12,9 +12,10 @@ def main():
         pfamDict = checkModuleWithDomains.pfamDictToInt(pfamDict)
         # checkModuleWithDomains.checkModulesWithDomains(borderDict, pfamDict)
         with open(conf.resultFile, "w") as wf:
-            wf.write("leeway\ttotNumModuleBorders\ttotNumNested\tSingleCountentCount\tMultContentCount\ts_mult_ratio\n")
+            wf.write("leeway\ttotNumModuleBorders\ttotNumNested\tSingleCountentCount\tMultContentCount\ttotDomainBorders\ts_mult_ratio\n")
             for leeway in range(0, 20, 1):
-                detailedResults, singleContent, singleContentCount, multContentCount, totNestBorders, totNumBorders = \
+                detailedResults, singleContent, singleContentCount, multContentCount, \
+                    totNestBorders, totNumBorders, totDomainBorders = \
                     checkModuleWithDomains.checkDomainsWithModules(borderDict, pfamDict, leeway)
 
                 # write results
@@ -32,6 +33,7 @@ def main():
                 wf.write(str(totNestBorders) + "\t")
                 wf.write(str(singleContentCount) + "\t")
                 wf.write(str(multContentCount) + "\t")
+                wf.write(str(totDomainBorders) + "\t")
                 wf.write(str(float(singleContentCount)/multContentCount) + "\n")
 
 
