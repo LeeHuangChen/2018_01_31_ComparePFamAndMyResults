@@ -3,6 +3,7 @@ import os
 from cPickle import load
 import configurations as conf
 
+
 def main():
     inputFiles = os.listdir(conf.inputFolder)
     for inputFile in inputFiles:
@@ -10,20 +11,28 @@ def main():
         pfamDict = load(open(conf.PFamInfoDir, "rb"))
         pfamDict = checkModuleWithDomains.pfamDictToInt(pfamDict)
         # checkModuleWithDomains.checkModulesWithDomains(borderDict, pfamDict)
+        with open(conf.resultFile, "w") as wf:
+            wf.write("leeway\ttotNumModuleBorders\ttotNumNested\tSingleCountentCount\tMultContentCount\ts_mult_ratio\n")
+            for leeway in range(0, 20, 1):
+                detailedResults, singleContent, singleContentCount, multContentCount, totNestBorders, totNumBorders = \
+                    checkModuleWithDomains.checkDomainsWithModules(borderDict, pfamDict, leeway)
 
-        detailedResults, singleContent, singleContentCount, multContentCount = \
-            checkModuleWithDomains.checkDomainsWithModules(borderDict, pfamDict)
+                # write results
+                util.generateDirectories(conf.singleFolder)
+                util.generateDirectories(conf.detailFolder)
 
-        # write results
-        util.generateDirectories(conf.resultFolder)
-        with open(os.path.join(conf.resultFolder, util.fileAppend(inputFile, "_detailedResults.txt")),"w") as f:
-            f.write(detailedResults)
-        with open(os.path.join(conf.resultFolder, util.fileAppend(inputFile, "_results.txt")),"w") as f:
-            f.write("SingleCountentCount\t"+str(singleContentCount)+"\n")
-            f.write("MultContentCount\t"+str(multContentCount)+"\n")
-            f.write("\nSingleContent:\n")
-            for c in singleContent.keys():
-                f.write(str(c)+"\t"+str(singleContent[c])+"\n")
+                with open(os.path.join(conf.detailFolder, util.fileAppend(inputFile, str(leeway)+".txt")), "w") as f:
+                    f.write(detailedResults)
+                with open(os.path.join(conf.singleFolder, util.fileAppend(inputFile, str(leeway)+".txt")), "w") as f:
+                    f.write("\nSingleContent:\n")
+                    for c in singleContent.keys():
+                        f.write(str(c)+"\t"+str(singleContent[c])+"\n")
+                wf.write(str(leeway)+"\t")
+                wf.write(str(totNumBorders) + "\t")
+                wf.write(str(totNestBorders) + "\t")
+                wf.write(str(singleContentCount) + "\t")
+                wf.write(str(multContentCount) + "\t")
+                wf.write(str(float(singleContentCount)/multContentCount) + "\n")
 
 
 if __name__ == "__main__":

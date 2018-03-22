@@ -79,9 +79,12 @@ def checkModulesWithDomains(borderDict, pfamDict):
     print "inMultDomain:", inMultDomain
 
 
-def checkDomainsWithModules(borderDict, pfamDict):
+def checkDomainsWithModules(borderDict, pfamDict, nestedLeeway = 10):
     # A dictionary detailing which module combinations each domain has
     domainToModuleDict = {}
+
+    totNumBorders = 0
+    totNestBorders = 0
 
     proteins = borderDict.keys()
     for protein in proteins:
@@ -89,11 +92,13 @@ def checkDomainsWithModules(borderDict, pfamDict):
             # key: domain number
             # val: a sorted list of modules numbers
         domainContentDict = {}
+        moduleBorders = borderDict[protein]
+        totNumBorders += len(moduleBorders)
 
         # checking for all borders in this protein and populate the domainContentDict
-        for moduleBorder in borderDict[protein]:
-            for domainBorder in pfamDict[protein]:
-                m = moduleBorder[0]
+        for domainBorder in pfamDict[protein]:
+            nestedborders = []
+            for moduleBorder in moduleBorders:
                 ms = moduleBorder[1]
                 me = moduleBorder[2]
 
@@ -103,11 +108,18 @@ def checkDomainsWithModules(borderDict, pfamDict):
 
                 # If the domain boundary covers the module boundary
 
-                if ds <= ms and de >= me:
-                    if d in domainContentDict.keys():
-                        domainContentDict[d].append(m)
-                    else:
-                        domainContentDict[d] = [m]
+                #if ds <= ms and de >= me:
+                if ms - ds > -nestedLeeway and de - me > -nestedLeeway:
+                    if moduleBorder not in nestedborders:
+                        nestedborders.append(moduleBorder)
+
+            totNestBorders += len(nestedborders)
+            for moduleBorder in nestedborders:
+                m = moduleBorder[0]
+                if d in domainContentDict.keys():
+                    domainContentDict[d].append(m)
+                else:
+                    domainContentDict[d] = [m]
 
         for d in domainContentDict.keys():
             domainContentDict[d] = list(set(domainContentDict[d]))
@@ -158,7 +170,7 @@ def checkDomainsWithModules(borderDict, pfamDict):
     # print "singleContentCount: ", singleContentCount
     # print "multContentCount: ", multContentCount
 
-    return detailedResults, singleContent, singleContentCount, multContentCount
+    return detailedResults, singleContent, singleContentCount, multContentCount, totNestBorders, totNumBorders
 
 
 

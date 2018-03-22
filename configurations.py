@@ -10,6 +10,8 @@ PFamInfoDir = "Resources/PFamInfoByProtein.cpickle"
 inputFolder = "InputFiles"
 
 resultFolder = "Results"
-resultFile = "PFamBorderAnalysisResults.txt"
+singleFolder = "Results/SingleContent"
+detailFolder = "Results/DetailedResults"
+resultFile = "Results/summary.txt"
 
 simBorderFolder = "Results/SimularBoarderPairs"
